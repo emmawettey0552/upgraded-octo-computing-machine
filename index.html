@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { width: 90%; margin: 20px auto; background: rgba(255, 255, 255, 0.8); padding: 20px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); border-radius: 19px;}
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        table, th, td { border: 2px solid black;border-color: #0056b3; }
+        th, td { padding: 10px; text-align: center; }
+        input, button { margin: 5px; padding: 8px; }
+        body {background: url('logo.webp') no-repeat center center fixed;}
+        th {background: #007bff;
+        color: white;}
+        button { padding: 10px 15px; margin: 5px; border: none; background: #007bff; color: white; cursor: pointer; border-radius: 5px;}
+        button:hover {
+            background: #0056b3;
+        }
+   </style>
+</head>
+<body>
+   <div class="lock-screen" id="lockScreen">
+        <h2>Enter System Password</h2>
+        <input type="password" id="password" placeholder="Enter password">
+        <button onclick="checkPassword()">Unlock</button>
+        <p id="error" style="color: red;"></p>
+   </div>
+
+   <div id="main-container">
+    <div class="container">
+        <h2>TWILLIUM INDUSTRIAL COMPANY LIMITED   
+            <P>(Employee Management System)</P></h2><img class="logo.webp"></img>
+        <input type="text" id="name" placeholder="Name">
+        <input type="number" id="age" placeholder="Age">
+        <input type="text" id="position" placeholder="Position">
+        <input type="text" id="department" placeholder="Department">
+        <input type="number" id="salary" placeholder="Salary (Cedis)">
+        <button onclick="addEmployee()">Add</button>
+        <button onclick="updateEmployee()">Update</button>
+        <button onclick="deleteEmployee()">Delete</button>
+        <button onclick="loadEmployees()">Refresh</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name </th>
+                    <th>Age</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                    <th>Salary (Cedis)</th>
+                </tr>
+            </thead>
+            <tbody id="employeeTable"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function checkPassword() {
+            const correctPassword = "secure123";
+            let input = document.getElementById("password").value;
+            let errorMsg = document.getElementById("error");
+            
+            if (input === correctPassword) {
+                document.getElementById("lockScreen").style.display = "none";
+                document.getElementById("m fain-content").style.display = "block";
+            } else {
+                errorMsg.textContent = "Incorrect password! Try again.";
+            }
+        }
+        let employees = [];
+        function loadEmployees() {
+            let table = document.getElementById("employeeTable");
+            table.innerHTML = "";
+            employees.forEach((emp, index) => {
+                let row = `<tr onclick="selectEmployee(${index})">
+                    <td>${index + 1}</td>
+                    <td>${emp.name}</td>
+                    <td>${emp.age}</td>
+                    <td>${emp.position}</td>
+                    <td>${emp.department}</td>
+                    <td>${emp.salary}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        }
+        function addEmployee() {
+            let name = document.getElementById("name").value;
+            let age = document.getElementById("age").value;
+            let position = document.getElementById("position").value;
+            let department = document.getElementById("department").value;
+            let salary = document.getElementById("salary").value;
+            if ( name && age && position && department && salary) {
+                employees.push({ name, age, position, department, salary });
+                loadEmployees();
+            } else {
+                alert("All fields are required!");
+            }
+        }
+        function selectEmployee(index) {
+            document.getElementById("name").value = employees[index].name;
+            document.getElementById("age").value = employees[index].age;
+            document.getElementById("position").value = employees[index].position;
+            document.getElementById("department").value = employees[index].department;
+            document.getElementById("salary").value = employees[index].salary;
+            document.getElementById("name").setAttribute("data-index", index);
+        }
+        function updateEmployee() {
+            let index = document.getElementById("name").getAttribute("data-index");
+            if (index !== null) {
+                employees[index] = {
+                    name: document.getElementById("name").value,
+                    age: document.getElementById("age").value,
+                    position: document.getElementById("position").value,
+                    department: document.getElementById("department").value,
+                    salary: document.getElementById("salary").value
+                };
+                loadEmployees();
+            } else {
+                alert("Select an employee first!");
+            }
+        }
+        function deleteEmployee() {
+            let index = document.getElementById("name").getAttribute("data-index");
+            if (index !== null) {
+                employees.splice(index, 1);
+                loadEmployees();
+            } else {
+                alert("Select an employee first!");
+            }
+        }
+    </script>
+ </body>
+</html>
